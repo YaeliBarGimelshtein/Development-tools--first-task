@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -112,5 +113,150 @@ public class Airport {
 				"arrivals planned";
 	}
 
+	public void searchFlights(Scanner scan) {
+		int choice;
+		do {
+			menu();
+			choice=scan.nextInt();
+			switch (choice) {
+			case 1:
+				System.out.println("plese enter the kind of flight you want to find (arrival/departure)");
+				String value;
+				value=scan.nextLine();
+				if(value.equals("arrival")) {
+					System.out.println(arrivals.toString());
+				}else
+					System.out.println(departures.toString());
+				break;
+			case 2:
+				System.out.println("plese enter the airline youre looking for");
+				String value2;
+				value2=scan.nextLine();
+				for (int i = 0; i < arrivals.size(); i++) {
+					if(arrivals.get(i).getAirline().equals(value2)) {
+						System.out.println(arrivals.get(i).toString());
+					}
+				}
+				for (int i = 0; i < departures.size(); i++) {
+					if(departures.get(i).getAirline().equals(value2)) {
+						System.out.println(departures.get(i).toString());
+					}
+				}
+				break;
+			case 3:
+				System.out.println("plese enter the origin youre looking for");
+				String value3;
+				scan.nextLine();
+				value3=scan.nextLine();
+				for (int i = 0; i < arrivals.size(); i++) {
+					if(arrivals.get(i).getOrigin().equals(value3)) {
+						System.out.println(arrivals.get(i).toString());
+					}
+				}
+				for (int i = 0; i < departures.size(); i++) {
+					if(departures.get(i).getOrigin().equals(value3)) {
+						System.out.println(departures.get(i).toString());
+					}
+				}
+				break;
+			case 4:
+				System.out.println("plese enter the destenation youre looking for");
+				String value4;
+				value4=scan.nextLine();
+				for (int i = 0; i < arrivals.size(); i++) {
+					if(arrivals.get(i).getDestination().equals(value4)) {
+						System.out.println(arrivals.get(i).toString());
+					}
+				}
+				for (int i = 0; i < departures.size(); i++) {
+					if(departures.get(i).getDestination().equals(value4)) {
+						System.out.println(departures.get(i).toString());
+					}
+				}
+				break;
+			case 5:
+				System.out.println("plese enter the flight number youre looking for");
+				String value5;
+				value5=scan.nextLine();
+				for (int i = 0; i < arrivals.size(); i++) {
+					if(arrivals.get(i).getFlightNumber().equals(value5)) {
+						System.out.println(arrivals.get(i).toString());
+					}
+				}
+				for (int i = 0; i < departures.size(); i++) {
+					if(departures.get(i).getFlightNumber().equals(value5)) {
+						System.out.println(departures.get(i).toString());
+					}
+				}
+				break;
+			case 6:
+				System.out.println("plese enter the dates youre looking for by year month day hours minutes");
+				String valueFirst, valueLast;
+				scan.nextLine();
+				valueFirst = scan.nextLine();
+				LocalDateTime fisrtDate = stringToDate(valueFirst);
+				System.out.println("and now for the end time");
+				valueLast = scan.nextLine();
+				LocalDateTime lastDate = stringToDate(valueLast);
+				for (int i = 0; i < arrivals.size(); i++) {
+					if (arrivals.get(i).getDateAndTime().isAfter(fisrtDate)
+							&& arrivals.get(i).getDateAndTime().isBefore(lastDate)) {
+						System.out.println(arrivals.get(i).toString());
+					}
+				}
+
+				for (int j = 0; j < departures.size(); j++) {
+						if (departures.get(j).getDateAndTime().isAfter(fisrtDate)
+								&& departures.get(j).getDateAndTime().isBefore(lastDate)) {
+							System.out.println(departures.get(j).toString());
+					}
+				}
+				break;
+			case 7:
+				return;
+			default:
+				System.out.println("you entered a wrong number, try again");
+				break;
+			}
+				
+		} while (choice!=7);
+		
+	}
+	
+	
+	
+
+	public static final int kind=1;
+	public static final int airline=2;
+	public static final int origin=3;
+	public static final int destenation=4;
+	public static final int date=6;
+	public static final int number=5;
+	public static final int exit=7;
+	
+	public static void menu() {
+		System.out.println("to search by kind press "+kind);
+		System.out.println("to search by airline press "+airline);
+		System.out.println("to search by origin press "+origin);
+		System.out.println("to search by destenation press "+destenation);
+		System.out.println("to search by number press "+number);
+		System.out.println("to search by date press "+date);
+		System.out.println("to exit to main menu "+exit);
+	}
+	
+	public LocalDateTime stringToDate(String dateandTime) {
+		String[] dateAndTimeS= dateandTime.split(" ");
+		String date=dateAndTimeS[0];
+		String[] dateArray= date.split("/");
+		int year= Integer.parseUnsignedInt(dateArray[2]);
+		int month=Integer.parseUnsignedInt(dateArray[1]);
+		int day=Integer.parseUnsignedInt(dateArray[0]);
+		String time=dateAndTimeS[1];
+		String[] timeArray= time.split(":");
+		int hours=Integer.parseUnsignedInt(timeArray[0]);
+		int minutes=Integer.parseUnsignedInt(timeArray[1]);
+		LocalDateTime finalDate=LocalDateTime.of(year, month, day, hours, minutes);
+		return finalDate;
+	}
 	
 }

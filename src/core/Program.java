@@ -9,7 +9,7 @@ public class Program {
 
 	public static void main(String[] args) throws  FileNotFoundException, ParseException {
 		Scanner scan=new Scanner(System.in);
-		File f=new File("C:\\Users\\Yaeli Bar\\Desktop\\airport");
+		File f=new File("Airport");
 		Airport airport=new Airport("Mnager");
 		int choice=0;
 		
@@ -45,19 +45,20 @@ public class Program {
 			case 5:
 				airport.readFromFile(f);
 				break;
+			case 6:
+				airport.searchFlights(scan);
+				break;
 			default:
 				System.out.println("option unavailable");
 			}
 		} while (choice!=-1);		
-		
-
-
 	}
 	public static final int Add_Flight=1;
 	public static final int Show_All_Departures=2;
 	public static final int Show_All_Arrivals=3;
 	public static final int Write_to_file=4;
 	public static final int Read_From_File=5;
+	public static final int Search=6;;
 	
 	public static void menu() {
 		System.out.println("welcome to the flights app");
@@ -66,6 +67,7 @@ public class Program {
 		System.out.println("to show all arrivals press "+Show_All_Arrivals);
 		System.out.println("to save the data to file press "+Write_to_file);
 		System.out.println("to read saved data from file press "+Read_From_File);
+		System.out.println("to search a flight press "+Search);
 	}
 
 }

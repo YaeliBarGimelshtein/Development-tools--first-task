@@ -127,5 +127,30 @@ public class Flight  {
 		writer.println(this.flightNumber);
 		writer.println(this.terminal);
 	}
+
+	public String getFlightNumber() {
+		return flightNumber;
+	}
+
+	
+
+	public String getAirline() {
+		return airline;
+	}
+
+	
+
+	public String getOrigin() {
+		return origin;
+	}
+
+	
+
+	public String getDestination() {
+		return destination;
+	}
+
+	
+
 }
 
