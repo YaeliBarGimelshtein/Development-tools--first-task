@@ -22,7 +22,7 @@ public class Program {
 		airport.addFlight(flight2);
 		airport.addFlight(flight3);
 		airport.addFlight(flight4);
-	
+		String str="";
 		
 		do {
 			menu();
@@ -46,7 +46,8 @@ public class Program {
 				airport.readFromFile(f);
 				break;
 			case 6:
-				airport.searchFlights(scan);
+				str=airport.searchFlights(scan);
+				System.out.println(str);
 				break;
 			default:
 				System.out.println("option unavailable");
