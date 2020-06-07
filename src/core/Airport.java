@@ -114,155 +114,183 @@ public class Airport {
 	}
 
 	public String searchFlights(Scanner scan) {
-		int choice;
-		String returnStr="";
-		do {
-			menu();
-			choice=scan.nextInt();
-			switch (choice) {
-			case 1:
-				System.out.println("plese enter the kind of flight you want to find (arrival/departure)");
-				String value;
-				scan.nextLine();
-				value=scan.nextLine();
-				if(value.equals("arrival")) {
-					returnStr= arrivals.toString();
-				}else
-					returnStr= departures.toString();
-				break;
-			case 2:
-				System.out.println("plese enter the airline youre looking for");
-				String value2;
-				value2=scan.nextLine();
-				StringBuffer sb= new StringBuffer();
-				for (int i = 0; i < arrivals.size(); i++) {
-					if(arrivals.get(i).getAirline().equals(value2)) {
-						sb.append(arrivals.get(i).toString());
-					}
-				}
-				for (int i = 0; i < departures.size(); i++) {
-					if(departures.get(i).getAirline().equals(value2)) {
-						sb.append(departures.get(i).toString());
-					}
-				}
-				returnStr= sb.toString();
-				break;
-			case 3:
-				System.out.println("plese enter the origin youre looking for");
-				String value3;
-				scan.nextLine();
-				value3=scan.nextLine();
-				StringBuffer sb2= new StringBuffer();
-				for (int i = 0; i < arrivals.size(); i++) {
-					if(arrivals.get(i).getOrigin().equals(value3)) {
-						sb2.append(arrivals.get(i).toString());
-					}
-				}
-				for (int i = 0; i < departures.size(); i++) {
-					if(departures.get(i).getOrigin().equals(value3)) {
-						sb2.append(departures.get(i).toString());
-					}
-				}
-				returnStr= sb2.toString();
-				break;
-			case 4:
-				System.out.println("plese enter the destenation youre looking for");
-				String value4;
-				value4=scan.nextLine();
-				StringBuffer sb3= new StringBuffer();
-				for (int i = 0; i < arrivals.size(); i++) {
-					if(arrivals.get(i).getDestination().equals(value4)) {
-						sb3.append(arrivals.get(i).toString());
-					}
-				}
-				for (int i = 0; i < departures.size(); i++) {
-					if(departures.get(i).getDestination().equals(value4)) {
-						sb3.append(departures.get(i).toString());
-					}
-				}
-				returnStr= sb3.toString();
-				break;
-			case 5:
-				System.out.println("plese enter the flight number youre looking for");
-				String value5;
-				value5=scan.nextLine();
-				StringBuffer sb4= new StringBuffer();
-				for (int i = 0; i < arrivals.size(); i++) {
-					if(arrivals.get(i).getFlightNumber().equals(value5)) {
-						sb4.append(arrivals.get(i).toString());
-					}
-				}
-				for (int i = 0; i < departures.size(); i++) {
-					if(departures.get(i).getFlightNumber().equals(value5)) {
-						sb4.append(departures.get(i).toString());
-					}
-				}
-				returnStr= sb4.toString();
-				break;
-			case 6:
-				System.out.println("plese enter the dates youre looking for by year month day hours minutes");
-				String valueFirst, valueLast;
-				scan.nextLine();
-				valueFirst = scan.nextLine();
-				LocalDateTime fisrtDate = stringToDate(valueFirst);
-				System.out.println("and now for the end time");
-				valueLast = scan.nextLine();
-				LocalDateTime lastDate = stringToDate(valueLast);
-				StringBuffer sb5= new StringBuffer();
-				for (int i = 0; i < arrivals.size(); i++) {
-					if (arrivals.get(i).getDateAndTime().isAfter(fisrtDate)
-							&& arrivals.get(i).getDateAndTime().isBefore(lastDate)) {
-						sb5.append(arrivals.get(i).toString());
-					}
-				}
-
-				for (int j = 0; j < departures.size(); j++) {
-						if (departures.get(j).getDateAndTime().isAfter(fisrtDate)
-								&& departures.get(j).getDateAndTime().isBefore(lastDate)) {
-							sb5.append(departures.get(j).toString());
-					}
-				}
-				returnStr= sb5.toString();
-				break;
-			case 7:
-				break;
-			default:
-				System.out.println("you entered a wrong number, try again");
-				break;
-			}
-				
-		} while (choice!=7);
-		return returnStr;
+		SearchEngine helper= new SearchEngine(scan);
+		List<Flight> flightAfterSearch=new ArrayList<Flight>();;
+		for (int i = 0; i < arrivals.size(); i++) {
+			Flight temp=new Flight(arrivals.get(i));
+			flightAfterSearch.add(temp);
+		}
+		for (int i = 0; i < departures.size(); i++) {
+			Flight temp=new Flight(departures.get(i));
+			flightAfterSearch.add(temp);
+		}
 		
+		if(helper.isByAirline()) {
+			flightAfterSearch=searchByAirline(helper.getAirline(), flightAfterSearch);
+		}
+		if(helper.isByDate()) {
+			flightAfterSearch=searchByDate(helper.getDatefirst(),helper.getDatelast(), flightAfterSearch);
+		}
+		if(helper.isByDestenation()) {
+			flightAfterSearch=searchByDestenation(helper.getDestenation(), flightAfterSearch);
+		}
+		if(helper.isByFlighNumber()) {
+			flightAfterSearch=searchByFlightNumner(helper.getFlightNumber(), flightAfterSearch);
+		}
+		if(helper.isByKind()) {
+			flightAfterSearch=searchByKind(helper.getKind(), flightAfterSearch);
+		}
+		if(helper.isByOrigin()) {
+			flightAfterSearch=searchByOrigin(helper.getOrigin(), flightAfterSearch);
+		}
+		StringBuffer sb= new StringBuffer();
+		for (int i = 0; i < flightAfterSearch.size(); i++) {
+			sb.append(flightAfterSearch.get(i).toString());
+		}
+		return sb.toString();
 	}
-	public String searchByKindArival() {
-		return arrivals.toString();
+	public String searchFlights(boolean byKind, boolean byAirline, boolean byOrigin, boolean ByDestenation ,
+			boolean byFlighNumber, boolean byDate, String kind, String airline, String origin, String destenation,
+			String flightNumber,String datefirst, String dateLast) {
+		SearchEngine helper= new SearchEngine( byKind,  byAirline,  byOrigin,  ByDestenation ,
+				 byFlighNumber,  byDate,  kind,  airline,  origin,  destenation,
+				 flightNumber, datefirst,  dateLast);
+		List<Flight> flightAfterSearch=new ArrayList<Flight>();;
+		for (int i = 0; i < arrivals.size(); i++) {
+			Flight temp=new Flight(arrivals.get(i));
+			flightAfterSearch.add(temp);
+		}
+		for (int i = 0; i < departures.size(); i++) {
+			Flight temp=new Flight(departures.get(i));
+			flightAfterSearch.add(temp);
+		}
+		
+		if(helper.isByAirline()) {
+			flightAfterSearch=searchByAirline(helper.getAirline(), flightAfterSearch);
+		}
+		if(helper.isByDate()) {
+			flightAfterSearch=searchByDate(helper.getDatefirst(),helper.getDatelast(), flightAfterSearch);
+		}
+		if(helper.isByDestenation()) {
+			flightAfterSearch=searchByDestenation(helper.getDestenation(), flightAfterSearch);
+		}
+		if(helper.isByFlighNumber()) {
+			flightAfterSearch=searchByFlightNumner(helper.getFlightNumber(), flightAfterSearch);
+		}
+		if(helper.isByKind()) {
+			flightAfterSearch=searchByKind(helper.getKind(), flightAfterSearch);
+		}
+		if(helper.isByOrigin()) {
+			flightAfterSearch=searchByOrigin(helper.getOrigin(), flightAfterSearch);
+		}
+		StringBuffer sb= new StringBuffer();
+		for (int i = 0; i < flightAfterSearch.size(); i++) {
+			sb.append(flightAfterSearch.get(i).toString());
+		}
+		return sb.toString();
 	}
-	public String searchByKindDepartue() {
-		return departures.toString();
+	
+	public List<Flight> searchByKind(String kind,List<Flight> allFlights ) {
+		if(kind.equals("Arrival")) {
+			for (int i = 0; i < allFlights.size(); i++) {
+				if(allFlights.get(i).getKind().equals("Departure")) {
+					allFlights.remove(i);
+					i--;
+				}
+			}
+		}else {
+			for (int i = 0; i < allFlights.size(); i++) {
+				if(allFlights.get(i).getKind().equals("Arrival")) {
+					allFlights.remove(i);
+					i--;
+				}
+			}
+		}	
+		return allFlights;
 	}
 	
 	
+	public List<Flight> searchByAirline(String airline, List<Flight> allFlights ) {
+		for (int i = 0; i < allFlights.size();i++) {
+			if(!(allFlights.get(i).getAirline().equals(airline))) {
+				allFlights.remove(i);
+				i--;
+			}
+		}
+		return allFlights;
+		}
 	
 	
+	public List<Flight> searchByOrigin(String origin, List<Flight> allFlights){
+		for (int i = 0; i < arrivals.size(); i++) {
+			if(!(arrivals.get(i).getOrigin().equals(origin))) {
+				allFlights.remove(i);
+				i--;
+			}
+		}
+		for (int i = 0; i < departures.size(); i++) {
+			if(!(departures.get(i).getOrigin().equals(origin))) {
+				allFlights.remove(i);
+				i--;
+			}
+		}
+		return allFlights;
+	}
+	
+	public List<Flight> searchByDestenation(String destenation, List<Flight> allFlights){
+		for (int i = 0; i < arrivals.size(); i++) {
+			if(!(arrivals.get(i).getDestination().equals(destenation))) {
+				allFlights.remove(i);
+				i--;
+			}
+		}
+		for (int i = 0; i < departures.size(); i++) {
+			if(!(departures.get(i).getDestination().equals(destenation))) {
+				allFlights.remove(i);
+				i--;
+			}
+		}
+		return allFlights;
+	}
+	
+	public List<Flight> searchByFlightNumner(String flightNumber, List<Flight> allFlights){
+		for (int i = 0; i < arrivals.size(); i++) {
+			if(!(arrivals.get(i).getFlightNumber().equals(flightNumber))) {
+				allFlights.remove(i);
+				i--;
+			}
+		}
+		for (int i = 0; i < departures.size(); i++) {
+			if(!(departures.get(i).getFlightNumber().equals(flightNumber))) {
+				allFlights.remove(i);
+				i--;
+			}
+		}
+		return allFlights;
+	}
+	
+	public List<Flight> searchByDate(String datefirst, String dateLast, List<Flight> allFlights){
+		LocalDateTime fisrtDate = stringToDate(datefirst);
+		System.out.println("and now for the end time");
+		LocalDateTime lastDate = stringToDate(dateLast);
+		for (int i = 0; i < arrivals.size(); i++) {
+			if (!(arrivals.get(i).getDateAndTime().isAfter(fisrtDate)
+					&& arrivals.get(i).getDateAndTime().isBefore(lastDate))) {
+				allFlights.remove(i);
+				i--;
+			}
+		}
 
-	public static final int kind=1;
-	public static final int airline=2;
-	public static final int origin=3;
-	public static final int destenation=4;
-	public static final int date=6;
-	public static final int number=5;
-	public static final int exit=7;
-	
-	public static void menu() {
-		System.out.println("to search by kind press "+kind);
-		System.out.println("to search by airline press "+airline);
-		System.out.println("to search by origin press "+origin);
-		System.out.println("to search by destenation press "+destenation);
-		System.out.println("to search by number press "+number);
-		System.out.println("to search by date press "+date);
-		System.out.println("to exit to main menu "+exit);
+		for (int j = 0; j < departures.size(); j++) {
+				if (!(departures.get(j).getDateAndTime().isAfter(fisrtDate)
+						&& departures.get(j).getDateAndTime().isBefore(lastDate))) {
+					allFlights.remove(j);
+					j--;
+			}
+		}
+		return allFlights;
 	}
+	
 	
 	public LocalDateTime stringToDate(String dateandTime) {
 		String[] dateAndTimeS= dateandTime.split(" ");

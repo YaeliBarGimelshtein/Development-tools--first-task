@@ -66,6 +66,16 @@ public class Flight  {
 		 setTerminal(terminalNum);
 	 }
 	 
+	public Flight(Flight flight) {
+		this.airline=flight.airline;
+		this.destination=flight.destination;
+		this.origin=flight.origin;
+		this.dateAndTime=flight.dateAndTime; 
+		this.flightNumber=flight.flightNumber;
+		setTerminal(flight.terminal);
+		this.kind=flight.kind;
+	}
+
 	public LocalDateTime getDateAndTime() {
 		 return this.dateAndTime;
 	 }

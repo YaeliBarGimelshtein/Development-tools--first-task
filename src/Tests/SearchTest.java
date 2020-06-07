@@ -8,8 +8,9 @@ import org.junit.Test;
 
 import core.Airport;
 import core.Flight;
+import core.SearchEngine;
 
-public class SearchByArrivalTest {
+public class SearchTest {
 	Scanner scan= new Scanner(System.in);
 
 	@Test
@@ -17,16 +18,14 @@ public class SearchByArrivalTest {
 		Airport airport=createAirport();
 		StringBuffer expectedResult = new StringBuffer();
 		expectedResult.append("[Arrival: airline name=Israir, origin=Tabilisi, date and time=01/06/2020 14:35, flight number=6H896, terminal=3\n" + 
-				", Arrival: airline name=United Airlines, origin=New York, date and time=13/05/2020 12:45, flight number=UA090, terminal=3\n" + 
 				"]");
 		
-		assertEquals(expectedResult.toString(),airport.searchByKindArival());
+		assertEquals(expectedResult.toString(),airport.searchFlights(true,true,false,false,false,false,"Arrival","Israir","","","","",""));
 	}
 	
 	
 	
-	
-	
+
 	private Airport createAirport() {
 		Airport airport= new Airport("Hithrow");
 		Flight flight1= new Flight("Israir", "Tlv", "Tabilisi", 2020, 6, 1, 14, 35, "6H896", 3);
