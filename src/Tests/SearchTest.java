@@ -17,14 +17,13 @@ public class SearchTest {
 	public void searchByKindArrivalTest() {
 		Airport airport=createAirport();
 		StringBuffer expectedResult = new StringBuffer();
-		expectedResult.append("[Arrival: airline name=Israir, origin=Tabilisi, date and time=01/06/2020 14:35, flight number=6H896, terminal=3\n" + 
-				"]");
-		
+		expectedResult.append("Arrival: airline name=Israir, origin=Tabilisi, date and time=01/06/2020 14:35, flight number=6H896, terminal=3\n");
+
 		assertEquals(expectedResult.toString(),airport.searchFlights(true,true,false,false,false,false,"Arrival","Israir","","","","",""));
 	}
-	
-	
-	
+
+
+
 
 	private Airport createAirport() {
 		Airport airport= new Airport("Hithrow");
@@ -36,7 +35,7 @@ public class SearchTest {
 		airport.addFlight(flight2);
 		airport.addFlight(flight4);
 		airport.addFlight(flight3);
-		
+
 		return airport;
 	}
 
